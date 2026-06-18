@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Sources\specialities.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Sources\specialities.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DswEj15.Domain\Dsw2026Ej15.Domain.csproj" />
   </ItemGroup>
 
