@@ -27,7 +27,14 @@ namespace Dsw2026Ej15.Data
         {
             _doctors.Add(doctor);
         }
-
+        public List<Doctor> GetActiveDoctors()
+        {
+            return _doctors.Where(d => d.IsActive).ToList();
+        }
+        public Doctor? GetDoctorById(Guid ID)
+        {
+            return _doctors.SingleOrDefault(d => d.Id == ID && d.IsActive);
+        }
         private void LoadSpecialities()
         {
             try
@@ -47,5 +54,7 @@ namespace Dsw2026Ej15.Data
             }
         }
     }
+
 }
+
 
