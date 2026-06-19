@@ -1,4 +1,4 @@
-
+  
 using Dsw2026Ej15.Data;
 using Dsw2026Ej15.Domain.Interfaces;
 
@@ -18,6 +18,7 @@ namespace Dsw2026Ej15.Api
            
 
             var app = builder.Build();
+            app.UseMiddleware<Dsw2026Ej15.Api.Middlewares.ExceptionMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -28,6 +29,7 @@ namespace Dsw2026Ej15.Api
 
             app.UseAuthorization();
 
+            app.MapGet("/health-check", () => Results.Ok("API funciona de forma correcta"));
 
             app.MapControllers();
 

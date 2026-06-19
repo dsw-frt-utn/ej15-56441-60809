@@ -31,9 +31,9 @@ namespace Dsw2026Ej15.Data
         {
             return _doctors.Where(d => d.IsActive).ToList();
         }
-        public Doctor? GetDoctorById(Guid ID)
+        public Doctor? GetActiveDoctorById(Guid id)
         {
-            return _doctors.SingleOrDefault(d => d.Id == ID && d.IsActive);
+            return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive);
         }
         private void LoadSpecialities()
         {

@@ -2,6 +2,7 @@
 using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dsw2026Ej15.Api.Controllers;
 
@@ -22,13 +23,13 @@ public class DoctorsController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.LicenseNumber))
         {
-            return BadRequest("Nombre y matricula son requeridos");
+           throw new ValidationException("Nombre y matricula son requeridos");
         }
 
         var speciality = _persistence.GetSpecialityById(request.SpecialityId);
         if (speciality == null)
         {
-            return BadRequest("Especialidad no existe");
+            throw new ValidationException("Especialidad no existe");
         }
 
         var doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
@@ -39,25 +40,40 @@ public class DoctorsController : ControllerBase
     [HttpGet]
     public IActionResult GetActiveDoctors()
     {
-        var activeDoctors = _persistence.GetActiveDoctors();
-        return Ok(activeDoctors);
+        var doctors = _persistence.GetActiveDoctors();
+        var response = doctors.Select(d => new DoctorModel.Response(
+            d.Name,
+            d.LicenseNumber,
+            d.Speciality?.Name
+            ));
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     public IActionResult GetDoctorById(Guid id)
     {
         var doctor = _persistence.GetActiveDoctorById(id);
-      
-        if (doctor == null)
-        {
-            return NotFound("El medico no se encuentra/inactivo");
-        }
-        var response = new
-        {
-            Name = doctor.Name,
-            LicenseNumber = doctor.LicenseNumber,
-            SpecialityName = doctor.Speciality!.Name
-        };
+        if(doctor == null)
+            return NotFound("Medico no encontrado");
+        var response = new DoctorModel.Response(
+            doctor.Name,
+            doctor.LicenseNumber,
+            doctor?.Speciality?.Name
+            );
+
         return Ok(response);
     }
-}
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(Guid id)
+    {
+        var doctor = _persistence.GetActiveDoctorById(id);
+        if (doctor == null)
+            return NotFound("Medico no encontrado");
+
+        doctor.IsActive = false;
+        _persistence.SaveDoctor(doctor);
+ 
+        return NoContent();
+    }
+} 
