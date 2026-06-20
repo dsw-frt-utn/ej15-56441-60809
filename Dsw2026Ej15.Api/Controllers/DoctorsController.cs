@@ -2,7 +2,8 @@
 using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+//using System.ComponentModel.DataAnnotations;
+using Dsw2026Ej15.Domain.Exceptions;
 
 namespace Dsw2026Ej15.Api.Controllers;
 
@@ -34,6 +35,7 @@ public class DoctorsController : ControllerBase
 
         var doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
         _persistence.SaveDoctor(doctor);
+        Console.WriteLine($"Médico creado con Id: {doctor.Id}");
         return Created();
     }
 
